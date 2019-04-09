@@ -5,8 +5,8 @@ import android.graphics.Matrix
 import android.support.media.ExifInterface
 
 object Utils {
-    fun modifyOrientation(bitmap: Bitmap, image_absolute_path: String): Bitmap {
-        val ei = ExifInterface(image_absolute_path)
+    fun modifyOrientation(bitmap: Bitmap, imageAbsolutePath: String): Bitmap {
+        val ei = ExifInterface(imageAbsolutePath)
         val orientation =
             ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
         return when (orientation) {
