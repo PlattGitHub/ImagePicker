@@ -11,24 +11,25 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import com.example.imagepicker.Utils.modifyOrientation
 import kotlinx.android.synthetic.main.activity_main.*
 
-private const val REQUEST_CODE = 1
-private const val REQUEST_PERMISSION_READ_EXTERNAL_STORAGE = 2
-private const val SAVED_IMAGE_URI = "SAVED_IMAGE_URI"
-
+/**
+ * Activity that implements basic functionality
+ * of picking image from gallery and displaying it.
+ *
+ * @author Alexander Gorin
+ */
 class MainActivity : AppCompatActivity() {
 
-    var imageUri: Uri? = null
+    private var imageUri: Uri = Uri.EMPTY
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        imageUri = savedInstanceState?.getParcelable(SAVED_IMAGE_URI)
-        imageUri?.let {
-            showPhoto(it)
+        imageUri = savedInstanceState?.getParcelable(SAVED_IMAGE_URI) ?: Uri.EMPTY
+        if (imageUri != Uri.EMPTY) {
+            showPhoto(imageUri)
         }
 
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -85,7 +86,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        imageUri?.let {
+        if (imageUri != Uri.EMPTY) {
             outState?.putParcelable(SAVED_IMAGE_URI, imageUri)
         }
     }
@@ -104,6 +105,12 @@ class MainActivity : AppCompatActivity() {
         val filePath = cursor.getString(columnIndex)
         cursor.close()
         return Pair(BitmapFactory.decodeFile(filePath), filePath)
+    }
+
+    private companion object {
+        const val REQUEST_CODE = 1
+        const val REQUEST_PERMISSION_READ_EXTERNAL_STORAGE = 2
+        const val SAVED_IMAGE_URI = "SAVED_IMAGE_URI"
     }
 }
 
